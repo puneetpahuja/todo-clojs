@@ -41,6 +41,26 @@
 	                  (res.end (JSON.stringfy localTodos))))
 	          (res.end (JSON.stringfy localTodos)))
 	      (res.end (JSON.stringfy localTodos)))
+	  (if (== method "POST")
+	  	   (if (= (request.url.indexOf "/todos") 0)
+	  	   	   (do (let body "")
+	  	   	   	    (req.on "data" (fn [chunk]
+	  	   	   	    	               (assign body (+ body chunk))))
+	  	   	   	    (req.on "end" (fn []
+	  	   	   	    	              (let jsonObj (JSON.parse body))
+	  	   	   	    	              (if (jsonObj.message)
+	  	   	   	    	              	  (do (assign jsonObj.id (+ (Math.random) ""))
+	  	   	   	    	              	  	  (assign)
+	  	   	   	    	              	  	  (res.setHeader "Content-Type" "application/json")
+	  	   	   	    	              	  	  (res.end (JSON.stringfy (todos)))
+	  	   	   	    	              	  	  ))))
+	  	   	   	    )))
+	  (if (== method "DELETE")
+	  	  (if (= (request.url.indexOf "/todos") 0)
+	  	  	  (do (let id (req.url.substr 7))                 
+	  	  	  	)
+	  	  	))
+
 	)))
 
 (server.listen 3001)
