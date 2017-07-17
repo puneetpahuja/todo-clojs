@@ -1,81 +1,87 @@
-(def todoListE1 ($ "#my-todo-list"))
+(def todoListEl ($ "#my-todo-list"))
 
 (defn drawList []
-  (let temp ($ "#searchbox"))
-  (def searchText (temp.val))
+  (def searchText (.val ($ "#searchbox")))
   ($.ajax {url "/todos"
            type "get"
            dataType "json"
            data {searchtext searchText}
            success (fn [todos]
-                     (let temp1 ($ "#my-todo-list"))
-                     (temp1.html "")
-                     (todos.forEach (fn [todoitem]
-                                      (def li ($ (+ "<li id"
-                                                    todoItem.id
-                                                    "><input type = checkbox>"
-                                                    todoItem.message
-                                                    "<button class='delete'>X</button></li>")))
-                                      (def input (li.find "input"))
-                                      (input.prop "checked" todoItem.completed)
-                                      (let temp2 ($ "#my-todo-list"))
-                                      (temp2.append li))))
+                     (.html ($ "#my-todo-list") "")
+                     (.forEach todos (fn [todoItem]
+                                       (def li ($ (+ "<li id="
+                                                     todoItem.id
+                                                     "><input type = checkbox>"
+                                                     todoItem.message
+                                                     "<button class='delete'>X</button></li>")))
+                                       (def input (.find li "input"))
+                                       (.prop input "checked" todoItem.completed)
+                                       (.append ($ "#my-todo-list") li)
+                                       undefined))
+                     undefined)
            error (fn [data]
-                   (alert "Error searching"))}))
+                   (alert "Error searching")
+                   undefined)})
+  undefined)
 
 (defn addToDo []
-  (let temp ($ "#savebox"))
-  (def saveText (temp.val))
-  (let temp1 ($ "#savebox"))
-  (temp1.val "")
+  (def saveText (.val ($ "#savebox")))
+  (.val ($ "#savebox") "")
   ($.ajax {url "/todos"
            type "post"
            dataType "json"
            data (JSON.stringify {message saveText
                                  completed false})
            success (fn [todos]
-                     (drawList))
+                     (drawList)
+                     undefined)
            error (fn [data]
-                   (alert "Error"))}))
+                   (alert "Error")
+                   undefined)})
+  undefined)
 
 (defn deleteItem [todoItemID]
   ($.ajax {url (+ "/todos/" todoItemID)
            type "delete"
            success (fn [data]
-                     (drawList))
+                     (drawList)
+                     undefined)
            error (fn [data]
-                   (alert "Error deleting the item"))}))
+                   (alert "Error deleting the item")
+                   undefined)})
+  undefined)
 
 (defn updateList [todoItemID]
   ($.ajax {url (+ "/todos/" todoItemID)
            type "put"
            success (fn [data]
-                     (drawList))
+                     (drawList)
+                     undefined)
            error (fn [data]
-                   (alert "Error updating the item"))}))
+                   (alert "Error updating the item")
+                   undefined)})
+  undefined)
 
 (drawList)
 
-(def gtemp ($ "#searchbut"))
-(gtemp.on "click" (fn []
-                    (drawList)))
+(.on ($ "#searchbut") "click" (fn []
+                                (drawList)
+                                undefined))
 
-(def gtemp1 ($ "#savebut"))
-(gtemp1.on "click" (fn []
-                     (addToDo)))
+(.on ($ "#savebut")  "click" (fn []
+                               (addToDo)
+                               undefined))
 
-(def gtemp2 ($ "ul"))
-(gtemp2.on "click"
-           ".delete"
-           (fn [event]
-             (let temp ($ this)
-                  temp2 (temp.parent))
-             (deleteItem (temp2.attr "id"))))
+(.on ($ "ul")
+     "click"
+     ".delete"
+     (fn [event]
+       (deleteItem (.attr (.parent ($ this)) "id"))
+       undefined))
 
-(def gtemp3 ($ "ul"))
-(gtemp3.on "change"
-           "input"
-           (fn [event]
-             (let temp ($ this)
-                  temp2 (temp.parent))
-             (updateList (temp2.attr "id"))))
+(.on ($ "ul")
+     "change"
+     "input"
+     (fn [event]
+       (updateList (.attr (.parent ($ this)) "id"))
+       undefined))
